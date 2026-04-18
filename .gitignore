@@ -1,0 +1,19 @@
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Claude Code local state
+.claude/settings.local.json
+.claude/projects/
+.claude/memory/
+
+# Secrets — NON committare mai token o chiavi
+.env
+*.token
+*_secret*
