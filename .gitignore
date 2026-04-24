@@ -13,6 +13,9 @@ desktop.ini
 .claude/projects/
 .claude/memory/
 
+# DOE runtime state (se questo repo viene usato come progetto DOE, non committare lo stato)
+.doe/
+
 # Secrets — NON committare mai token o chiavi
 .env
 *.token
