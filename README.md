@@ -101,6 +101,58 @@ Non serve per task banali (un singolo fix, una domanda) — l'overhead delle 3 f
 
 ---
 
+## Auto-approve per velocizzare DOE (opzionale)
+
+DOE funziona bene anche con i prompt di conferma standard di Claude Code, ma se vuoi farlo filare dritto sulle operazioni sicure (lettura, modifica file, comandi git innocui, test) senza approvare manualmente ogni volta, usa il file [`settings.example.json`](settings.example.json) incluso in questa repo.
+
+### Cosa contiene
+
+- `defaultMode: "acceptEdits"` — auto-approva modifiche ai file.
+- **Allowlist**: `Read`, `Edit`, `Write`, `git status/diff/log/add/commit`, `npm/pnpm/yarn test/run`, `pytest`, `cargo test/build`, `go test/build`, ecc.
+- **Denylist esplicita** (questi restano bloccati anche se rientrano in un'allowlist): `rm -rf`, `curl|sh`, `git push --force`, `git reset --hard`, `sudo`, lettura di `.env`, chiavi SSH, credenziali.
+
+### Come applicarlo
+
+**Globale** (vale per tutti i progetti):
+
+```bash
+# Linux/macOS
+mkdir -p ~/.claude
+curl -o ~/.claude/settings.json \
+  https://raw.githubusercontent.com/direzionemarketingtools/DOE/main/settings.example.json
+```
+
+```powershell
+# Windows PowerShell
+New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.claude" | Out-Null
+Invoke-WebRequest -Uri "https://raw.githubusercontent.com/direzionemarketingtools/DOE/main/settings.example.json" `
+  -OutFile "$env:USERPROFILE\.claude\settings.json"
+```
+
+**Solo in un progetto** (sostituisce quello globale per quella repo):
+
+```bash
+mkdir -p .claude
+curl -o .claude/settings.json \
+  https://raw.githubusercontent.com/direzionemarketingtools/DOE/main/settings.example.json
+```
+
+### Alternativa al volo (solo per la sessione corrente)
+
+Dentro Claude Code: premi `Shift+Tab` per ciclare tra permission mode. Scegli `acceptEdits` se vuoi auto-approvare solo le modifiche ai file.
+
+Da terminale, per avviare già in `acceptEdits`:
+
+```bash
+claude --permission-mode acceptEdits
+```
+
+### ⚠️ Sicurezza
+
+L'allowlist è pensata per essere conservativa: niente `rm`, niente `curl | sh`, niente `sudo`. Rileggi `settings.example.json` prima di usarlo e adattalo alle tue esigenze. Se apri un progetto di cui non ti fidi, rimuovi o limita l'allowlist — Claude Code leggerà i file di quel progetto e una prompt injection potrebbe istruire l'agente a eseguire comandi leciti per l'allowlist ma dannosi nel tuo contesto.
+
+---
+
 ## Licenza
 
 MIT — vedi [LICENSE](LICENSE). Uso libero personale e commerciale.
